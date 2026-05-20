@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brasileirão na Copa 2026 — Confirmar Presença</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --amarelo: #FFCC00;
+      --verde: #009c3B;
+      --azul: #002776;
+      --vermelho: #FF0000;
+      --branco: #FFFFFF;
+      --preto: #111111;
+      --dourado: #C9A84C;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto Condensed', sans-serif;
+      background: var(--preto);
+      color: var(--branco);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(135deg, var(--azul) 0%, var(--preto) 50%, var(--verde) 100%);
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="%23FFCC00" stroke-width="0.5" opacity="0.08"/></svg>') repeat;
+      background-size: 60px 60px;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .copa-badge {
+      display: inline-block;
+      background: var(--amarelo);
+      color: var(--preto);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.3em;
+      padding: 8px 32px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 10rem);
+      color: var(--amarelo);
+      line-height: 0.9;
+      text-shadow: 4px 4px 0 var(--azul), 8px 8px 0 rgba(0,0,0,0.3);
+      letter-spacing: 0.05em;
+    }
+    .hero h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 6vw, 5rem);
+      color: var(--branco);
+      margin-top: 8px;
+      letter-spacing: 0.1em;
+    }
+    .hero-sub {
+      font-size: 1.2rem;
+      color: rgba(255,255,255,0.7);
+      margin-top: 16px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .scroll-down {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      animation: bounce 2s infinite;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--amarelo);
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .scroll-down svg { width: 24px; height: 24px; }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ANFITRIÕES */
+    .hosts {
+      background: linear-gradient(to right, var(--verde), var(--amarelo));
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .hosts-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: var(--preto);
+      letter-spacing: 0.2em;
+    }
+    .host-tag {
+      background: var(--preto);
+      color: var(--amarelo);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      padding: 6px 20px;
+      border-radius: 4px;
+    }
+
+    /* SECTIONS */
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--amarelo);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+    }
+
+    /* MATCHES */
+    .matches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .match-card {
+      background: linear-gradient(145deg, #1a1a1a, #222);
+      border: 2px solid var(--amarelo);
+      border-radius: 8px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .match-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(to right, var(--amarelo), var(--verde));
+    }
+    .match-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(255,204,0,0.2);
+    }
+    .match-date {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.85rem;
+      color: var(--amarelo);
+      letter-spacing: 0.2em;
+      margin-bottom: 16px;
+    }
+    .match-teams {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .team-flag {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      background: #fff;
+      border: 3px solid var(--amarelo);
+      overflow: hidden;
+    }
+    .team-flag img { width: 100%; height: 100%; object-fit: cover; }
+    .team-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-align: center;
+      color: var(--branco);
+    }
+    .team-name.small { font-size: 0.75rem; color: rgba(255,255,255,0.6); }
+    .vs {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      color: var(--amarelo);
+      flex-shrink: 0;
+    }
+    .match-info {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .match-stage {
+      color: var(--verde);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .match-venue { font-style: italic; }
+
+    /* CONFIRMAR PRESENÇA */
+    .confirm-section {
+      background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+      border: 2px solid var(--verde);
+      border-radius: 12px;
+      padding: 48px;
+      text-align: center;
+    }
+    .confirm-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--amarelo);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+    .confirm-section p {
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 40px;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+    }
+    .guests-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .guest-card {
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .guest-card:hover { border-color: var(--amarelo); background: rgba(255,204,0,0.05); }
+    .guest-card.confirmed {
+      border-color: var(--verde);
+      background: rgba(0,156,59,0.1);
+    }
+    .guest-card.confirmed .guest-check {
+      background: var(--verde);
+      color: var(--branco);
+    }
+    .guest-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--azul);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: var(--amarelo);
+      border: 3px solid rgba(255,204,0,0.3);
+    }
+    .guest-card.confirmed .guest-avatar {
+      border-color: var(--verde);
+    }
+    .guest-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.05em;
+      text-align: center;
+      color: var(--branco);
+    }
+    .guest-check {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .confirm-summary {
+      margin-top: 32px;
+      padding: 24px;
+      background: rgba(0,156,59,0.1);
+      border: 2px solid var(--verde);
+      border-radius: 8px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: var(--verde);
+      letter-spacing: 0.1em;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--azul);
+      padding: 32px 24px;
+      text-align: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: var(--amarelo);
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 40px;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+    }
+    .tab {
+      padding: 12px 32px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.15em;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 4px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab:hover { color: var(--branco); }
+    .tab.active {
+      color: var(--amarelo);
+      border-bottom-color: var(--amarelo);
+    }
+
+    /* ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 600px) {
+      .guests-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+      .guest-card { padding: 14px 8px; }
+      .guest-avatar { width: 48px; height: 48px; font-size: 1.2rem; }
+      .confirm-section { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-content">
+      <div class="copa-badge">🇺🇸🇲🇽🇨🇦 COPA DO MUNDO 2026</div>
+      <h1>BRASIL</h1>
+      <h2>Copa FIFA · 🇺🇸🇲🇽🇨🇦</h2>
+      <p class="hero-sub">11 de Junho — 19 de Julho de 2026</p>
+    </div>
+    <div class="scroll-down" onclick="document.getElementById('matches').scrollIntoView({behavior:'smooth'})">
+      <span>Ver jogos</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10l5 5 5-5"/></svg>
+    </div>
+  </section>
+
+  <!-- HOSTS -->
+  <div class="hosts">
+    <span class="hosts-label">🌎 ANFITRIÕES:</span>
+    <span class="host-tag">🇺🇸Estados Unidos</span>
+    <span class="host-tag">🇲🇽México</span>
+    <span class="host-tag">🇨🇦Canadá</span>
+    <span class="host-tag" style="background:var(--amarelo);color:var(--preto)">🏆 48 times · 104 jogos</span>
+  </div>
+
+  <!-- MATCHES -->
+  <section class="section fade-in" id="matches">
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('group')">FASE DE GRUPOS</button>
+      <button class="tab" onclick="showTab('knockout')">ELIMINATÓRIAS</button>
+    </div>
+    <h2 class="section-title">JOGOS DO BRASIL</h2>
+    <p class="section-sub">Sorteio da fase de grupos: data a definir · Brasil posição uncertain</p>
+
+    <div id="tab-group" class="tab-content">
+      <div class="matches-grid" id="matches-group"></div>
+    </div>
+    <div id="tab-knockout" class="tab-content" style="display:none">
+      <div class="matches-grid" id="matches-knockout"></div>
+    </div>
+  </section>
+
+  <!-- CONFIRMAR PRESENÇA -->
+  <section class="section fade-in" id="confirm">
+    <h2 class="section-title">QUEM VAI ASSISTIR?</h2>
+    <p class="section-sub">Clique no seu nome para confirmar presença · atualização em tempo real</p>
+    <div class="confirm-section">
+      <h2>🎉 CONFIRME SUA PRESENÇA</h2>
+      <p>Escolha seu nome na lista abaixo</p>
+      <div class="guests-grid" id="guests"></div>
+      <div class="confirm-summary" id="summary">0 de 11 confirmados</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    BRASILEIRÃO NA COPA 2026 · 🇺🇸🇲🇽🇨🇦 COPA DO MUNDO FIFA · Feito com ❤️ por Leo & BK
+  </footer>
+
+  <script>
+    // ── DADOS DOS JOGOS DO BRASIL ──────────────────────────────────────────────
+    // Nota: Fase de grupos ainda não sorteada — jogos em vermelho são PLACEHOLDER.
+    // Atualize com os dados reais após o sorteio (pré-Copa 2026).
+    const BRASIL_MATCHES = [
+      {
+        id: 1,
+        date: 'Jun 13', day: 'Sáb', time: '14:00',
+        team1: { name: 'Brasil', flag: '🇧🇷', short: 'BRA' },
+        team2: { name: 'A definir', flag: '❓', short: '???' },
+        stage: 'Grupo A',
+        venue: 'Cidade do México',
+        confirmed: false,
+        note: 'PLACEHOLDER — atualizar após sorteio'
+      },
+      {
+        id: 2,
+        date: 'Jun 18', day: 'Qui', time: '18:00',
+        team1: { name: 'Brasil', flag: '🇧🇷', short: 'BRA' },
+        team2: { name: 'A definir', flag: '❓', short: '???' },
+        stage: 'Grupo A',
+        venue: 'Cidade do México',
+        confirmed: false,
+        note: 'PLACEHOLDER'
+      },
+      {
+        id: 3,
+        date: 'Jun 24', day: 'Qua', time: '16:00',
+        team1: { name: 'Brasil', flag: '🇧🇷', short: 'BRA' },
+        team2: { name: 'A definir', flag: '❓', short: '???' },
+        stage: 'Grupo A',
+        venue: 'Seattle',
+        confirmed: false,
+        note: 'PLACEHOLDER'
+      },
+      {
+        id: 4,
+        date: 'Jul 02', day: 'Qui', time: '16:00',
+        team1: { name: 'Brasil', flag: '🇧🇷', short: 'BRA' },
+        team2: { name: 'A definir', flag: '❓', short: '???' },
+        stage: 'Oitavas',
+        venue: 'TBD',
+        confirmed: false,
+        note: 'PLACEHOLDER'
+      },
+      {
+        id: 5,
+        date: 'Jul 07', day: 'Ter', time: '18:00',
+        team1: { name: 'Brasil', flag: '🇧🇷', short: 'BRA' },
+        team2: { name: 'A definir', flag: '❓', short: '???' },
+        stage: 'Quartas',
+        venue: 'TBD',
+        confirmed: false,
+        note: 'PLACEHOLDER'
+      },
+      {
+        id: 6,
+        date: 'Jul 14', day: 'Ter', time: '18:00',
+        team1: { name: 'Brasil', flag: '🇧🇷', short: 'BRA' },
+        team2: { name: 'A definir', flag: '❓', short: '???' },
+        stage: 'Semi-final',
+        venue: 'TBD',
+        confirmed: false,
+        note: 'PLACEHOLDER'
+      },
+      {
+        id: 7,
+        date: 'Jul 19', day: 'Dom', time: '12:00',
+        team1: { name: 'Brasil', flag: '🇧🇷', short: 'BRA' },
+        team2: { name: 'A definir', flag: '❓', short: '???' },
+        stage: 'FINAL',
+        venue: 'Nova York',
+        confirmed: false,
+        note: 'PLACEHOLDER'
+      }
+    ];
+
+    // ── CONVIDADOS ─────────────────────────────────────────────────────────────
+    const GUESTS = [
+      { id: 'bk',     name: 'BK',        first: 'B', color: '#FFCC00' },
+      { id: 'daniel', name: 'Daniel',    first: 'D', color: '#009c3B' },
+      { id: 'enailreg', name: 'Enailreg', first: 'E', color: '#002776' },
+      { id: 'felipe', name: 'Felipe',    first: 'F', color: '#FF0000' },
+      { id: 'gabru',  name: 'Gabru',     first: 'G', color: '#C9A84C' },
+      { id: 'glorinha', name: 'Glorinha', first: 'Gl', color: '#E91E63' },
+      { id: 'gustavo', name: 'Gustavo P.', first: 'GP', color: '#3F51B5' },
+      { id: 'ilana',  name: 'Ilana',     first: 'I', color: '#9C27B0' },
+      { id: 'natan',  name: 'Natan',     first: 'N', color: '#FF9800' },
+      { id: 'rosangela', name: 'Rosangela', first: 'R', color: '#795548' },
+      { id: 'leo',    name: 'Leo',       first: 'L', color: '#00BCD4' },
+    ];
+
+    // ── STORAGE ────────────────────────────────────────────────────────────────
+    function getConfirmed() {
+      try {
+        return JSON.parse(localStorage.getItem('brasil_copa_confirmed') || '[]');
+      } catch { return []; }
+    }
+    function setConfirmed(ids) {
+      localStorage.setItem('brasil_copa_confirmed', JSON.stringify(ids));
+    }
+
+    // ── RENDER MATCHES ──────────────────────────────────────────────────────────
+    function renderMatches() {
+      const groupEl = document.getElementById('matches-group');
+      const knockoutEl = document.getElementById('matches-knockout');
+      groupEl.innerHTML = '';
+      knockoutEl.innerHTML = '';
+
+      BRASIL_MATCHES.forEach(m => {
+        const isKnockout = ['Oitavas','Quartas','Semi-final','FINAL'].includes(m.stage);
+        const el = document.createElement('div');
+        el.className = 'match-card';
+        el.innerHTML = `
+          <div class="match-date">${m.day} · ${m.date} · ${m.time} ${m.note ? ' ⚠️' : ''}</div>
+          <div class="match-teams">
+            <div class="team">
+              <div class="team-flag">${m.team1.flag}</div>
+              <div class="team-name">${m.team1.name}</div>
+            </div>
+            <div class="vs">VS</div>
+            <div class="team">
+              <div class="team-flag">${m.team2.flag}</div>
+              <div class="team-name">${m.team2.name}</div>
+            </div>
+          </div>
+          <div class="match-info">
+            <span class="match-stage">${m.stage}</span>
+            <span class="match-venue">${m.venue}</span>
+          </div>
+        `;
+        if (isKnockout) knockoutEl.appendChild(el);
+        else groupEl.appendChild(el);
+      });
+    }
+
+    // ── RENDER GUESTS ──────────────────────────────────────────────────────────
+    function renderGuests() {
+      const container = document.getElementById('guests');
+      const confirmed = getConfirmed();
+      container.innerHTML = '';
+
+      GUESTS.forEach(g => {
+        const isConfirmed = confirmed.includes(g.id);
+        const card = document.createElement('div');
+        card.className = 'guest-card' + (isConfirmed ? ' confirmed' : '');
+        card.onclick = () => toggleConfirm(g.id);
+        card.innerHTML = `
+          <div class="guest-avatar" style="background:${g.color}">${g.first}</div>
+          <div class="guest-name">${g.name}</div>
+          <div class="guest-check">${isConfirmed ? '✓' : ''}</div>
+        `;
+        container.appendChild(card);
+      });
+
+      updateSummary();
+    }
+
+    function toggleConfirm(id) {
+      const confirmed = getConfirmed();
+      const idx = confirmed.indexOf(id);
+      if (idx >= 0) confirmed.splice(idx, 1);
+      else confirmed.push(id);
+      setConfirmed(confirmed);
+      renderGuests();
+    }
+
+    function updateSummary() {
+      const confirmed = getConfirmed();
+      const el = document.getElementById('summary');
+      const total = GUESTS.length;
+      const count = confirmed.length;
+      el.textContent = `${count} de ${total} confirmados`;
+    }
+
+    // ── TABS ────────────────────────────────────────────────────────────────────
+    function showTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => {
+        if (t.textContent.toLowerCase().includes(tab) ||
+            (tab === 'group' && t.textContent.includes('GRUPOS')) ||
+            (tab === 'knockout' && t.textContent.includes('ELIMINAT'))) {
+          t.classList.add('active');
+        }
+      });
+      document.getElementById('tab-group').style.display = tab === 'group' ? '' : 'none';
+      document.getElementById('tab-knockout').style.display = tab === 'knockout' ? '' : 'none';
+    }
+
+    // ── SCROLL ANIMATION ────────────────────────────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ── BOOT ────────────────────────────────────────────────────────────────────
+    renderMatches();
+    renderGuests();
+  </script>
+</body>
+</html>
