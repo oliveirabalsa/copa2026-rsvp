@@ -25,10 +25,7 @@
       justify-content: center;
       padding: 40px 20px;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
+    .header { text-align: center; margin-bottom: 48px; }
     .badge {
       display: inline-block;
       background: var(--amarelo);
@@ -72,10 +69,16 @@
       color: rgba(255,255,255,0.5);
       letter-spacing: 0.1em;
     }
-    .hosts span {
-      color: var(--amarelo);
-      font-weight: 700;
+    .hosts span { color: var(--amarelo); font-weight: 700; }
+    .status-bar {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4);
+      height: 20px;
     }
+    .status-bar.online { color: var(--verde); }
+    .status-bar.offline { color: #FF5722; }
 
     .grid {
       display: flex;
@@ -98,10 +101,7 @@
       transition: all 0.2s;
       user-select: none;
     }
-    .guest:hover {
-      border-color: var(--amarelo);
-      transform: scale(1.05);
-    }
+    .guest:hover { border-color: var(--amarelo); transform: scale(1.05); }
     .guest.confirmed {
       border-color: var(--verde);
       background: rgba(0,156,59,0.12);
@@ -122,15 +122,8 @@
       color: var(--branco);
       border: 3px solid rgba(255,255,255,0.2);
     }
-    .guest.confirmed .avatar {
-      border-color: var(--verde);
-    }
-    .name {
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: 0.05em;
-      color: var(--branco);
-    }
+    .guest.confirmed .avatar { border-color: var(--verde); }
+    .name { font-weight: 700; font-size: 0.95rem; letter-spacing: 0.05em; color: var(--branco); }
     .check {
       width: 28px;
       height: 28px;
@@ -161,16 +154,35 @@
     <div class="subtitle">🇧🇷 HEXA?</div>
     <div class="date-badge">SÁB · 13/06 · 14:00</div>
     <div class="hosts">anfitriões: <span>Leo & BK</span></div>
+    <div class="status-bar" id="status">conectando...</div>
   </div>
 
   <div class="grid" id="grid"></div>
 
   <div class="footer">
-    clique no nome para confirmar · salvo no seu navegador<br/>
-    <span>Leo & BK © 2026</span>
+    confirmação em tempo real · <span>Leo & BK © 2026</span>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
   <script>
+    // ══════════════════════════════════════════════════════
+    // 👉 COLE AQUI SUA CONFIG DO FIREBASE
+    // Substitua o texto entre aspas pela sua configuração
+    // ══════════════════════════════════════════════════════
+    const FIREBASE_CONFIG = {
+      apiKey:            "COLE_SUA_API_KEY_AQUI",
+      authDomain:        "COLE_SEU_AUTH_DOMAIN_AQUI",
+      databaseURL:      "COLE_SUA_DATABASE_URL_AQUI",
+      projectId:         "COLE_SEU_PROJECT_ID_AQUI",
+      storageBucket:    "COLE_SEU_STORAGE_BUCKET_AQUI",
+      messagingSenderId: "COLE_SEU_MESSAGING_SENDER_ID_AQUI",
+      appId:             "COLE_SEU_APP_ID_AQUI"
+    };
+    // ══════════════════════════════════════════════════════
+
     const GUESTS = [
       { id: 'leo',       name: 'Leo',        first: 'L', color: '#00BCD4' },
       { id: 'bk',        name: 'BK',         first: 'B', color: '#FFCC00' },
@@ -185,32 +197,27 @@
       { id: 'rosangela', name: 'Rosangela',  first: 'R', color: '#795548' },
     ];
 
-    const STORAGE_KEY = 'copa13_confirmed';
+    // ── FIREBASE INIT ──────────────────────────────────────
+    let db;
+    try {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+      document.getElementById('status').textContent = '● ao vivo';
+      document.getElementById('status').className = 'status-bar online';
+    } catch (e) {
+      document.getElementById('status').textContent = 'modo local (Firebase não configurado)';
+      document.getElementById('status').className = 'status-bar offline';
+    }
 
-    function getConfirmed() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-      catch { return []; }
-    }
-    function setConfirmed(ids) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
-    }
-    function toggle(id) {
-      const confirmed = getConfirmed();
-      const idx = confirmed.indexOf(id);
-      if (idx >= 0) confirmed.splice(idx, 1);
-      else confirmed.push(id);
-      setConfirmed(confirmed);
-      render();
-    }
-    function render() {
+    // ── RENDER ─────────────────────────────────────────────
+    function render(confirmed) {
       const grid = document.getElementById('grid');
-      const confirmed = getConfirmed();
       grid.innerHTML = '';
       GUESTS.forEach(g => {
         const isC = confirmed.includes(g.id);
         const el = document.createElement('div');
         el.className = 'guest' + (isC ? ' confirmed' : '');
-        el.onclick = () => toggle(g.id);
+        el.onclick = () => toggle(g.id, confirmed);
         el.innerHTML = `
           <div class="avatar" style="background:${g.color}">${g.first}</div>
           <div class="name">${g.name}</div>
@@ -219,7 +226,28 @@
         grid.appendChild(el);
       });
     }
-    render();
+
+    // ── TOGGLE ─────────────────────────────────────────────
+    function toggle(id, confirmed) {
+      if (!db) return;
+      const idx = confirmed.indexOf(id);
+      const next = [...confirmed];
+      if (idx >= 0) next.splice(idx, 1);
+      else next.push(id);
+      db.ref('confirmations/match_13_06').set(next);
+    }
+
+    // ── LISTEN ──────────────────────────────────────────────
+    if (db) {
+      db.ref('confirmations/match_13_06').on('value', snap => {
+        const data = snap.val() || [];
+        render(data);
+      });
+    } else {
+      // fallback localStorage
+      const local = JSON.parse(localStorage.getItem('copa13_confirmed') || '[]');
+      render(local);
+    }
   </script>
 </body>
 </html>
