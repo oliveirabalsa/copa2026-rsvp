@@ -5,7 +5,8 @@
   "scripts": {
     "build": "echo 'Static site — no build step required'",
     "start": "npx serve .",
-    "dev": "npx serve ."
+    "dev": "npx serve .",
+    "test": "node -e \"const fs=require('fs');const h=fs.readFileSync('index.html','utf8');const checks=[['delete modal HTML','modal-delete-guest'],['delete password input','delete-guest-pass'],['delete confirm button','delete-confirm'],['delete JS handler','openDeleteConfirmModal'],['delete cleans confirmedYes','confirmedYes = confirmedYes.filter']];let ok=true;checks.forEach(([label,token])=>{if(!h.includes(token)){console.error('FAIL: missing '+label+' ('+token+')');ok=false;}else{console.log('PASS: '+label);}});if(!ok)process.exit(1);else console.log('All checks passed.');\""
   },
   "license": "MIT"
 }

@@ -415,7 +415,7 @@
 </head>
 <body>
   <audio id="wrong-pass-sound" src="./trolla-zap.mp3" preload="auto"></audio>
-  <div class="wrong-pass-alert" id="wrong-pass-alert">Senha errada para adicionar convidado</div>
+  <div class="wrong-pass-alert" id="wrong-pass-alert">Senha incorreta</div>
 
   <div class="page">
     <div class="header">
@@ -486,6 +486,21 @@
       <div class="modal-btns">
         <button class="modal-btn cancel" id="add-cancel">Cancelar</button>
         <button class="modal-btn confirm" id="add-confirm" style="background:var(--amarelo);color:#111;">Adicionar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DELETE GUEST MODAL ── -->
+  <div class="modal-overlay" id="modal-delete-guest">
+    <div class="modal">
+      <h2>🗑️ Remover</h2>
+      <p id="delete-guest-name-text">Tem certeza que quer remover este convidado?</p>
+      <div class="form-row">
+        <input type="password" id="delete-guest-pass" placeholder="Senha para remover" maxlength="10" />
+      </div>
+      <div class="modal-btns">
+        <button class="modal-btn cancel" id="delete-cancel">Cancelar</button>
+        <button class="modal-btn confirm" id="delete-confirm" style="background:var(--vermelho);color:#fff;">Remover</button>
       </div>
     </div>
   </div>
@@ -591,6 +606,24 @@
       `;
       addCard.onclick = openAddGuestModal;
       grid.appendChild(addCard);
+
+      // Delete guest card
+      const delCard = document.createElement('div');
+      delCard.className = 'add-guest-card';
+      delCard.style.cssText = 'border-color:rgba(255,0,0,0.3);color:rgba(255,80,80,0.5);';
+      const delAvatar = document.createElement('div');
+      delAvatar.className = 'avatar';
+      delAvatar.style.cssText = 'border-color:rgba(255,0,0,0.3);font-size:1.5rem;background:transparent;';
+      delAvatar.textContent = '🗑️';
+      const delLabel = document.createElement('div');
+      delLabel.className = 'name';
+      delLabel.textContent = 'remover';
+      delCard.appendChild(delAvatar);
+      delCard.appendChild(delLabel);
+      delCard.onmouseenter = () => { delCard.style.borderColor = 'var(--vermelho)'; delCard.style.color = 'var(--vermelho)'; };
+      delCard.onmouseleave = () => { delCard.style.borderColor = 'rgba(255,0,0,0.3)'; delCard.style.color = 'rgba(255,80,80,0.5)'; };
+      delCard.onclick = () => showSelectModal('delete', null);
+      grid.appendChild(delCard);
     }
 
     // ── SELECT GUEST MODAL ─────────────────────────────────
@@ -612,6 +645,7 @@
         btn.onclick = () => {
           if (action === 'yes') handleYes(id);
           else if (action === 'no') handleNo(id);
+          else if (action === 'delete') { openDeleteConfirmModal(id); }
           else handleToggle(id);
           closeSelectModal();
         };
@@ -626,8 +660,13 @@
         return;
       }
 
-      title.textContent = action === 'yes' ? '👍 Vou ir!' : '👎 Num vai daaaa';
-      sub.textContent   = 'Quem é você?';
+      if (action === 'delete') {
+        title.textContent = '🗑️ Remover Convidado';
+        sub.textContent   = 'Qual convidado remover?';
+      } else {
+        title.textContent = action === 'yes' ? '👍 Vou ir!' : '👎 Num vai daaaa';
+        sub.textContent   = 'Quem é você?';
+      }
       document.getElementById('modal-select-guest').classList.add('active');
     }
 
@@ -740,6 +779,44 @@
 
     document.getElementById('add-cancel').onclick = closeAddGuestModal;
 
+    // ── DELETE GUEST MODAL ──────────────────────────────────
+    let pendingDeleteId = null;
+
+    function openDeleteConfirmModal(id) {
+      pendingDeleteId = id;
+      document.getElementById('delete-guest-pass').value = '';
+      document.getElementById('delete-guest-name-text').textContent =
+        'Remover "' + guests[id].name + '" da lista?';
+      document.getElementById('modal-delete-guest').classList.add('active');
+      setTimeout(() => document.getElementById('delete-guest-pass').focus(), 100);
+    }
+
+    function closeDeleteConfirmModal() {
+      document.getElementById('modal-delete-guest').classList.remove('active');
+      pendingDeleteId = null;
+    }
+
+    document.getElementById('delete-confirm').onclick = () => {
+      const password = document.getElementById('delete-guest-pass').value.trim();
+      if (password !== ADD_GUEST_PASSWORD) {
+        triggerWrongPasswordAlert();
+        return;
+      }
+      const id = pendingDeleteId;
+      const newGuests = { ...guests };
+      delete newGuests[id];
+      guests = newGuests;
+      confirmedYes = confirmedYes.filter(x => x !== id);
+      const newNo = { ...confirmedNo };
+      delete newNo[id];
+      confirmedNo = newNo;
+      closeDeleteConfirmModal();
+      saveGuestsToFirebase();
+      saveToFirebase();
+    };
+
+    document.getElementById('delete-cancel').onclick = closeDeleteConfirmModal;
+
     function triggerWrongPasswordAlert() {
       const alert = document.getElementById('wrong-pass-alert');
       const sound = document.getElementById('wrong-pass-sound');
@@ -822,6 +899,10 @@
 
     document.getElementById('new-guest-initials').addEventListener('keydown', e => {
       if (e.key === 'Enter') document.getElementById('add-confirm').click();
+    });
+
+    document.getElementById('delete-guest-pass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('delete-confirm').click();
     });
 
     // Init render with defaults
