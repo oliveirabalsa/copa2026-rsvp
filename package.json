@@ -1,0 +1,11 @@
+{
+  "name": "copa2026-rsvp",
+  "version": "1.0.0",
+  "description": "Copa 2026 watch party RSVP page",
+  "scripts": {
+    "build": "echo 'Static site — no build step required'",
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "license": "MIT"
+}
