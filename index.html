@@ -19,14 +19,22 @@
       font-family: 'Roboto Condensed', sans-serif;
       background: var(--preto);
       color: var(--branco);
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      padding: 20px;
+      overflow: hidden;
     }
-    .header { text-align: center; margin-bottom: 48px; }
+    .page {
+      width: min(1100px, 100%);
+      height: min(100dvh - 40px, 900px);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      overflow: hidden;
+    }
+    .header { text-align: center; margin-bottom: 0; }
     .badge {
       display: inline-block;
       background: var(--amarelo);
@@ -85,7 +93,6 @@
     .actions {
       display: flex;
       gap: 16px;
-      margin-bottom: 40px;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -113,11 +120,19 @@
 
     /* ── GUEST GRID ── */
     .grid {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
       gap: 16px;
-      justify-content: center;
-      max-width: 800px;
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .grid-wrap {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 4px;
     }
     .guest {
       background: rgba(255,255,255,0.05);
@@ -128,8 +143,8 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      min-width: 130px;
-      max-width: 160px;
+      min-width: 0;
+      width: 100%;
       cursor: pointer;
       transition: all 0.2s;
       user-select: none;
@@ -194,8 +209,8 @@
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      min-width: 130px;
-      max-width: 160px;
+      min-width: 0;
+      width: 100%;
       cursor: pointer;
       transition: all 0.2s;
       color: rgba(255,255,255,0.4);
@@ -285,35 +300,145 @@
     .modal input[name="guestInitials"] { text-transform: uppercase; maxlength: 2; }
 
     .footer {
-      margin-top: 48px;
       text-align: center;
       color: rgba(255,255,255,0.3);
       font-size: 0.8rem;
       letter-spacing: 0.15em;
     }
     .footer span { color: var(--amarelo); }
+
+    .wrong-pass-alert {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #B60000;
+      color: #fff;
+      border: 2px solid #ff7070;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.12em;
+      font-size: 1rem;
+      z-index: 300;
+      display: none;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+      text-transform: uppercase;
+    }
+    .wrong-pass-alert.show {
+      display: block;
+      animation: alert-flicker 0.12s steps(2, end) 10;
+    }
+    @keyframes alert-flicker {
+      0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.15; transform: translateX(-50%) scale(1.02); }
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        width: min(760px, 100%);
+      }
+      h1 {
+        font-size: clamp(2.6rem, 9vw, 4.4rem);
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 10px;
+      }
+      .page {
+        height: calc(100dvh - 20px);
+        gap: 14px;
+      }
+      .badge {
+        font-size: 0.82rem;
+        padding: 4px 12px;
+        margin-bottom: 8px;
+      }
+      h1 {
+        font-size: clamp(2rem, 13vw, 3rem);
+        line-height: 0.9;
+      }
+      .subtitle {
+        margin-top: 4px;
+        font-size: 1.05rem;
+      }
+      .date-badge {
+        margin-top: 8px;
+        font-size: 0.9rem;
+        padding: 6px 14px;
+      }
+      .hosts {
+        margin-top: 10px;
+        font-size: 0.78rem;
+      }
+      .status-bar {
+        margin-top: 6px;
+        font-size: 0.74rem;
+        height: 16px;
+      }
+      .actions {
+        gap: 10px;
+      }
+      .btn {
+        font-size: 1.05rem;
+        padding: 10px 18px;
+      }
+      .grid {
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .guest, .add-guest-card {
+        padding: 12px;
+      }
+      .avatar {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+      }
+      .name {
+        font-size: 0.84rem;
+      }
+      .footer {
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+      }
+      .wrong-pass-alert {
+        width: calc(100% - 24px);
+        text-align: center;
+        font-size: 0.88rem;
+        top: 10px;
+      }
+    }
   </style>
 </head>
 <body>
+  <audio id="wrong-pass-sound" src="./trolla-zap.mp3" preload="auto"></audio>
+  <div class="wrong-pass-alert" id="wrong-pass-alert">Senha errada para adicionar convidado</div>
 
-  <div class="header">
-    <div class="badge">🇺🇸🇲🇽🇨🇦 COPA 2026</div>
-    <h1>BRASIL</h1>
-    <div class="subtitle">🇧🇷 HEXA?</div>
-    <div class="date-badge">SÁB · 13/06 · 14:00</div>
-    <div class="hosts">anfitriões: <span>Leo & BK</span></div>
-    <div class="status-bar" id="status">conectando...</div>
-  </div>
+  <div class="page">
+    <div class="header">
+      <div class="badge">🇺🇸🇲🇽🇨🇦 COPA 2026</div>
+      <h1>BRASIL</h1>
+      <div class="subtitle">🇧🇷 HEXA?</div>
+      <div class="date-badge">SÁB · 13/06 · 14:00</div>
+      <div class="hosts">anfitriões: <span>Leo & BK</span></div>
+      <div class="status-bar" id="status">conectando...</div>
+    </div>
 
-  <div class="actions">
-    <button class="btn btn-vou-ir" id="btn-vou-ir">👍 Vou ir!</button>
-    <button class="btn btn-nao-vou" id="btn-nao-vou">👎 Num vai daaaa</button>
-  </div>
+    <div class="actions">
+      <button class="btn btn-vou-ir" id="btn-vou-ir">👍 Vou ir!</button>
+      <button class="btn btn-nao-vou" id="btn-nao-vou">👎 Num vai daaaa</button>
+    </div>
 
-  <div class="grid" id="grid"></div>
+    <div class="grid-wrap">
+      <div class="grid" id="grid"></div>
+    </div>
 
-  <div class="footer">
-    confirmação em tempo real · <span>Leo & BK © 2026</span>
+    <div class="footer">
+      confirmação em tempo real · <span>Leo & BK © 2026</span>
+    </div>
   </div>
 
   <!-- ── DECLINE MODAL ── -->
@@ -349,6 +474,9 @@
   <div class="modal-overlay" id="modal-add-guest">
     <div class="modal">
       <h2>➕ Novo Convidado</h2>
+      <div class="form-row">
+        <input type="password" id="new-guest-pass" placeholder="Senha para adicionar convidado" maxlength="10" />
+      </div>
       <div class="form-row">
         <input type="text" id="new-guest-name" placeholder="Nome completo" maxlength="30" />
       </div>
@@ -402,6 +530,9 @@
     let confirmedYes = [];
     let confirmedNo  = {};
     let currentAction  = null; // 'yes' or 'no'
+    let wrongPassTimer = null;
+
+    const ADD_GUEST_PASSWORD = '261426';
 
     // ── INIT ──────────────────────────────────────────────
     try {
@@ -576,10 +707,11 @@
 
     // ── ADD GUEST MODAL ─────────────────────────────────────
     function openAddGuestModal() {
+      document.getElementById('new-guest-pass').value = '';
       document.getElementById('new-guest-name').value = '';
       document.getElementById('new-guest-initials').value = '';
       document.getElementById('modal-add-guest').classList.add('active');
-      setTimeout(() => document.getElementById('new-guest-name').focus(), 100);
+      setTimeout(() => document.getElementById('new-guest-pass').focus(), 100);
     }
 
     function closeAddGuestModal() {
@@ -587,8 +719,13 @@
     }
 
     document.getElementById('add-confirm').onclick = () => {
+      const password = document.getElementById('new-guest-pass').value.trim();
       const name = document.getElementById('new-guest-name').value.trim();
       let first = document.getElementById('new-guest-initials').value.trim().toUpperCase();
+      if (password !== ADD_GUEST_PASSWORD) {
+        triggerWrongPasswordAlert();
+        return;
+      }
       if (!name) return;
       if (!first) first = name.substring(0, 2).toUpperCase();
       const id = name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z_]/g, '');
@@ -602,6 +739,18 @@
     };
 
     document.getElementById('add-cancel').onclick = closeAddGuestModal;
+
+    function triggerWrongPasswordAlert() {
+      const alert = document.getElementById('wrong-pass-alert');
+      const sound = document.getElementById('wrong-pass-sound');
+      alert.classList.remove('show');
+      void alert.offsetWidth;
+      alert.classList.add('show');
+      if (wrongPassTimer) clearTimeout(wrongPassTimer);
+      wrongPassTimer = setTimeout(() => alert.classList.remove('show'), 1400);
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    }
 
     // ── FIREBASE READ ───────────────────────────────────────
     if (db) {
@@ -661,6 +810,18 @@
     // Enter key on decline modal
     document.getElementById('decline-reason').addEventListener('keydown', e => {
       if (e.key === 'Enter') document.getElementById('decline-confirm').click();
+    });
+
+    document.getElementById('new-guest-pass').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('add-confirm').click();
+    });
+
+    document.getElementById('new-guest-name').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('add-confirm').click();
+    });
+
+    document.getElementById('new-guest-initials').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('add-confirm').click();
     });
 
     // Init render with defaults
