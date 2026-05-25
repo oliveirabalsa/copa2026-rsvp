@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brasileirao na Copa 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -70,12 +70,12 @@
       </div>
 
       <!-- Tab Section Predictions -->
-      <div class="stack" id="section-predictions" style="display:none;">
+      <div class="stack predictions-grid-layout" id="section-predictions" style="display:none;">
         <section class="panel">
           <div class="section-head">
             <div>
-              <h2>Jogo do palpite</h2>
-              <p>Aposta simples: vencedor, placar exato e ranking acumulado no caminho para o hexa.</p>
+              <h2>Placar Oficial</h2>
+              <p>O resultado oficial da partida e andamento da rodada.</p>
             </div>
             <!-- Admin Shortcut to launch match result directly from predictions view -->
             <div id="admin-result-shortcut" style="display:none;">
@@ -85,25 +85,52 @@
 
           <div id="celebration-slot"></div>
           <div id="result-slot"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Palpites da Galera</h2>
+              <p>Apostas registradas antes do apito inicial. Quem acertar ganha moral.</p>
+            </div>
+          </div>
           <div class="prediction-list prediction-list-grid" id="prediction-list"></div>
         </section>
       </div>
 
       <!-- Tab Section Leaderboard -->
-      <div class="stack" id="section-leaderboard" style="display:none;">
+      <div class="stack leaderboard-grid-layout" id="section-leaderboard" style="display:none;">
         <section class="panel">
           <div class="section-head">
             <div>
-              <h2>Leaderboard</h2>
-              <p>5 pts no placar perfeito, 3 pts no resultado certo, 0 pts no erro.</p>
+              <h2>Classificação Geral</h2>
+              <p>Ranking acumulado dos palpites no caminho para o hexa.</p>
             </div>
           </div>
 
           <div class="leaderboard-list" id="leaderboard"></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Regras do Bolão</h2>
+              <p>Como funciona a pontuação em cada rodada:</p>
+            </div>
+          </div>
           <ul class="rule-list">
-            <li>Acertou o placar exato (cravo)? Ganha 5 pontos.</li>
-            <li>Acertou apenas o vencedor ou empate? Ganha 3 pontos.</li>
-            <li>Errou o resultado? Ganha 0 pontos.</li>
+            <li>
+              <div style="font-family:'Bebas Neue', sans-serif;font-size:1.1rem;letter-spacing:0.06em;color:var(--amarelo);margin-bottom:4px;">🎯 Placar Exato (Cravo) - 5 PONTOS</div>
+              <div style="font-size:0.88rem;color:rgba(255,255,255,0.7);">Acertou em cheio o placar do jogo. Ex: Palpite 2x1, Placar 2x1.</div>
+            </li>
+            <li>
+              <div style="font-family:'Bebas Neue', sans-serif;font-size:1.1rem;letter-spacing:0.06em;color:var(--verde);margin-bottom:4px;">✅ Vencedor / Empate - 3 PONTOS</div>
+              <div style="font-size:0.88rem;color:rgba(255,255,255,0.7);">Acertou o vencedor ou empate, mas errou o placar exato. Ex: Palpite 1x0, Placar 3x1.</div>
+            </li>
+            <li>
+              <div style="font-family:'Bebas Neue', sans-serif;font-size:1.1rem;letter-spacing:0.06em;color:var(--vermelho);margin-bottom:4px;">❌ Erro Total - 0 PONTOS</div>
+              <div style="font-size:0.88rem;color:rgba(255,255,255,0.7);">Errou o vencedor ou empate completamente.</div>
+            </li>
           </ul>
         </section>
       </div>

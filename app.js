@@ -851,9 +851,17 @@
         btn.classList.toggle("active", btn.dataset.tab === tabId);
       });
 
-      $("section-rsvp").style.display = tabId === "rsvp" ? "grid" : "none";
-      $("section-predictions").style.display = tabId === "predictions" ? "grid" : "none";
-      $("section-leaderboard").style.display = tabId === "leaderboard" ? "grid" : "none";
+      const sections = ["rsvp", "predictions", "leaderboard"];
+      sections.forEach(s => {
+        const sec = $(`section-${s}`);
+        if (s === tabId) {
+          sec.classList.add("active-section");
+          sec.style.display = "";
+        } else {
+          sec.classList.remove("active-section");
+          sec.style.display = "none";
+        }
+      });
     }
 
     function attachFirebase() {
