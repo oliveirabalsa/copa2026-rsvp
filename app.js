@@ -77,6 +77,7 @@
     ];
 
     const ADD_GUEST_PASSWORD = "261426";
+    const ADMIN_PASSWORD = "261426";
 
     const $ = id => document.getElementById(id);
     const escapeHtml = value => String(value)
@@ -1041,7 +1042,7 @@
       const isAdmin = currentUserId === "leo" || currentUserId === "bk";
       if (!isAdmin) {
         const password = $("result-pass").value.trim();
-        if (password !== ADD_GUEST_PASSWORD) {
+        if (password !== ADMIN_PASSWORD) {
           triggerWrongPasswordAlert();
           return;
         }
@@ -1060,6 +1061,26 @@
       closeResultModal();
       saveResultToFirebase(currentMatchId);
       render();
+    };
+
+    $("result-reset-all").onclick = () => {
+      const isAdmin = currentUserId === "leo" || currentUserId === "bk";
+      if (!isAdmin) {
+        const password = $("result-pass").value.trim();
+        if (password !== ADMIN_PASSWORD) {
+          triggerWrongPasswordAlert();
+          return;
+        }
+      }
+
+      if (confirm("Deseja realmente resetar o placar de TODAS as partidas? Isso apagará todos os resultados oficiais.")) {
+        MATCHES.forEach(match => {
+          matchState[match.id].result = null;
+          saveResultToFirebase(match.id);
+        });
+        closeResultModal();
+        render();
+      }
     };
 
     $("result-cancel").onclick = closeResultModal;

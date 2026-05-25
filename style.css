@@ -1192,6 +1192,31 @@ h1 {
   to { transform: scale(1); opacity: 1; }
 }
 
+/* Danger button reset styling */
+.modal-reset-section {
+  margin-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 16px;
+}
+.reset-all-btn {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ff5252;
+  border: 1px solid rgba(239, 68, 68, 0.25) !important;
+  width: 100%;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  justify-content: center;
+}
+.reset-all-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.5) !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+}
+
 /* Responsive Media Queries */
 @media (max-width: 1080px) {
   .dashboard {
@@ -1223,28 +1248,152 @@ h1 {
   .hero-top > div:last-child {
     justify-content: flex-start;
   }
-  .match-tabs,
-  .winner-grid,
-  .score-grid {
-    grid-template-columns: 1fr;
+  
+  /* Horizontal scroll for main navigation tabs */
+  .view-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
   }
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .view-tab {
+    font-size: 1rem;
+    padding: 8px 14px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
-  .prediction-card,
-  .leaderboard-item {
-    grid-template-columns: 1fr;
-    text-align: center;
-    justify-items: center;
+
+  /* Swipeable horizontal match tabs list */
+  .match-tabs {
+    display: flex;
+    overflow-x: auto;
     gap: 12px;
+    padding-bottom: 8px;
+    margin-top: 16px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
   }
-  .leaderboard-item {
-    grid-template-columns: auto 1fr auto;
+  .match-tab {
+    flex: 0 0 80%;
+    min-width: 240px;
+    scroll-snap-align: start;
+    padding: 12px 14px;
   }
-  .points {
-    text-align: center;
+
+  /* Actions Ribbon Grid */
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
   .btn {
     width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+
+  /* Roster grid scaling */
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .guest,
+  .add-guest-card {
+    padding: 14px 10px;
+    gap: 8px;
+    border-radius: 16px;
+  }
+  .guest .avatar,
+  .add-guest-card .avatar {
+    width: 46px;
+    height: 46px;
+    font-size: 1.2rem;
+    border-width: 2px;
+  }
+  .guest .name,
+  .add-guest-card .name {
+    font-size: 0.95rem;
+  }
+  .guest .status-tag,
+  .guest .mini-pill {
+    padding: 3px 6px;
+    font-size: 0.75rem;
+  }
+  .guest .prediction-score {
+    font-size: 1.1rem;
+  }
+  .guest-note {
+    font-size: 0.72rem;
+  }
+  .reason {
+    font-size: 0.72rem;
+    padding-left: 6px;
+  }
+
+  /* Horizontal rows for prediction cards */
+  .prediction-card {
+    grid-template-columns: 36px 1fr auto;
+    gap: 12px;
+    text-align: left;
+    align-items: center;
+    padding: 12px;
+    justify-items: stretch;
+  }
+  .prediction-card .avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    border-width: 2px;
+  }
+  .prediction-card strong {
+    font-size: 0.95rem;
+  }
+  .prediction-meta {
+    font-size: 0.78rem;
+  }
+
+  /* Horizontal rows for leaderboard items */
+  .leaderboard-item {
+    grid-template-columns: 40px 1fr auto;
+    gap: 12px;
+    padding: 12px;
+    text-align: left;
+    align-items: center;
+    justify-items: stretch;
+  }
+  .leaderboard-item .rank {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  .leaderboard-item strong {
+    font-size: 0.95rem;
+  }
+  .leaderboard-meta {
+    font-size: 0.78rem;
+  }
+  .points {
+    font-size: 1.2rem;
+    text-align: right;
+  }
+
+  /* Modals UX improvements */
+  .winner-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .score-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .modal-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+  .modal-btn {
+    width: 100%;
+    min-width: 0;
   }
 }
